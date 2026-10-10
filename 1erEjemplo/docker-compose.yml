@@ -1,0 +1,38 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: Patito+123456
+      POSTGRES_DB: midb
+    volumes:
+      - pg-data-2:/var/lib/postgresql/data
+    networks:
+      - mi-ultra-red
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 30s
+      retries: 5
+      start_period: 30s
+  web:
+    build: .
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./app:/app
+    environment:
+      DB_HOST: db
+      DB_NAME: midb
+      DB_USER: postgres
+      DB_PASSWORD: Patito+123456
+    depends_on:
+      db:
+        condition: service_healthy
+    networks:
+      - mi-ultra-red
+volumes:
+  pg-data-2:
+
+networks:
+  mi-ultra-red:
+    driver: bridge
