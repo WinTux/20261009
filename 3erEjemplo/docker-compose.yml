@@ -1,0 +1,64 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: app_laravel
+    restart: unless-stopped
+    ports:
+      - "8080:80"
+    volumes:
+      - ./src:/var/www/html
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_USERNAME: laravel
+      DB_PASSWORD: MiSecreto+321
+      DB_DATABASE: laravel
+    depends_on:
+      db:
+        condition: service_healthy
+    deploy:
+      resources:
+        limits:
+          cpus: '1.5'
+          memory: 768M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+    networks:
+      - laravel_net
+  db:
+    image: mysql:8.0
+    container_name: db_laravel
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: MiSecreto+root+321
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: MiSecreto+321
+    volumes:
+      - db_mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u" , "root", "-pMiSecreto+root+321"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    networks:
+      - laravel_net
+volumes:
+  db_mysql:
+
+networks:
+  laravel_net:
+    driver: bridge
