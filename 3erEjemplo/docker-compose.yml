@@ -34,18 +34,18 @@ services:
     container_name: db_laravel
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: MiSecreto+root+321
+      MYSQL_ROOT_PASSWORD: "MiSecreto+root+321"
       MYSQL_DATABASE: laravel
       MYSQL_USER: laravel
-      MYSQL_PASSWORD: MiSecreto+321
+      MYSQL_PASSWORD: "MiSecreto+321"
     volumes:
       - db_mysql:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u" , "root", "-pMiSecreto+root+321"]
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$${MYSQL_ROOT_PASSWORD}\" --silent"]
       interval: 5s
       timeout: 5s
       retries: 10
-      start_period: 30s
+      start_period: 60s
     deploy:
       resources:
         limits:
