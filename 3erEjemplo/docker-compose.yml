@@ -6,7 +6,7 @@ services:
     container_name: app_laravel
     restart: unless-stopped
     ports:
-      - "8080:80"
+      - "8083:80"
     volumes:
       - ./src:/var/www/html
     environment:
