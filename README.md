@@ -26,3 +26,18 @@ El siguiente ejemplo cambia los límites, del contenedor app_laravel, a RAM: 1Gi
 docker update --memory 1g --cpus 2 app_laravel
 docker update --memory 512m --cpus 1 app_laravel db_laravel
 ```
+# Para el ejemplo 6
+
+## Para ejecutar el proyecto en local:
+```bash
+npm install
+npm ci --omit=dev
+npm ci --only=production
+node index.js
+```
+Ahora podemos consultar, desde un navegador, http://localhost:3000 y veremos un mensaje de la app (no importa si es error 500).
+
+## Comando para StorageClass
+```bash
+kubectl get storageclass
+```
